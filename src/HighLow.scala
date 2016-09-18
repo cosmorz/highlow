@@ -17,19 +17,21 @@ object HighLow {
     val nextCard = deck.head
     println("Next Card is " + nextCard.number)
 
-    if (input == "high") {
-      if (currentCard < deck.head) {
-        println("Bingo!")
-      } else {
-        println("Wrong...")
-      }
-    } else {
-      if (currentCard > deck.head) {
-        println("Bingo!")
-      } else {
-        println("Wrong...")
-      }
+    val judge = input match {
+      case "high" => higher(nextCard, currentCard)
+      case "low" => higher(currentCard, nextCard)
+      case _ => false
     }
+
+    if (judge) {
+      println("Bingo!")
+    } else {
+      println("Wrong...")
+    }
+  }
+
+  def higher(c1: Card, c2: Card): Boolean = {
+    c1.number > c2.number
   }
 }
 
