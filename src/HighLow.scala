@@ -5,28 +5,40 @@ import scala.util.Random
   */
 object HighLow {
   def main(args: Array[String]): Unit = {
+
     val cards: List[Card] = Random.shuffle((1 to 13).map(n => Card(n))).toList
 
-    val currentCard = cards.head
-    val deck = cards.tail
-    println("場のカードは" + currentCard.number)
+    val result = game(cards.head, cards.tail, 5)
 
-    println("high / low")
+    if (result) {
+      println("Clear!")
+    } else {
+      println("Wrong...")
+    }
+  }
+
+  def game(card: Card, deck: List[Card], count: Int): Boolean = {
+    println("Game Count: " + count)
+
+    println("Current Card is " + card.number)
+
+    println("input: high / low")
     val input = scala.io.StdIn.readLine
 
-    val nextCard = deck.head
-    println("Next Card is " + nextCard.number)
+    println("Next Card is " + deck.head.number)
 
     val judge = input match {
-      case "high" => higher(nextCard, currentCard)
-      case "low" => higher(currentCard, nextCard)
+      case "high" => higher(deck.head, card)
+      case "low" => higher(card, deck.head)
       case _ => false
     }
 
-    if (judge) {
-      println("Bingo!")
-    } else {
-      println("Wrong...")
+    println("")
+
+    (judge, count) match {
+      case (false, _) => false
+      case (true, 1) => true
+      case (true, _) => game(deck.head, deck.tail, count - 1)
     }
   }
 
