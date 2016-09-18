@@ -9,9 +9,9 @@ object HighLow {
     val cards: List[Card] = Random.shuffle((1 to 13).map(n => Card(n))).toList
 
     if (game(cards.head, cards.tail, 5)) {
-      println("Clear!")
+      println("You win!")
     } else {
-      println("Wrong...")
+      println("You lose...")
     }
   }
 
@@ -31,17 +31,9 @@ object HighLow {
     println("input: high / low")
     val input = scala.io.StdIn.readLine
 
-    println("Next Card is " + deck.head.number)
+    println("Next Card is " + deck.head.number + "\n")
 
-    val judge = input match {
-      case "high" => higher(deck.head, card)
-      case "low" => higher(card, deck.head)
-      case _ => false
-    }
-
-    println("")
-
-    (judge, count) match {
+    (judge(card, deck.head, input), count) match {
       case (false, _) => false
       case (true, 1) => true
       case (true, _) => game(deck.head, deck.tail, count - 1)
@@ -51,12 +43,17 @@ object HighLow {
   /**
     * カード比較処理
     *
-    * @param c1 カード
-    * @param c2 カード
+    * @param card  場札
+    * @param head  比較札
+    * @param input 入力文字列
     * @return 比較結果
     */
-  def higher(c1: Card, c2: Card): Boolean = {
-    c1.number > c2.number
+  def judge(card: Card, head: Card, input: String): Boolean = {
+    input match {
+      case "high" => head.number > card.number
+      case "low" => card.number > head.number
+      case _ => false
+    }
   }
 }
 
